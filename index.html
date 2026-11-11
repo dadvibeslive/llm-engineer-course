@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>LLM Engineer Self-Learning Course</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,600;1,500&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2rem; }
+
+      :root {
+        --bg: #f6f4ee;
+        --bg-raise: #fffdf8;
+        --bg-sink: #eceade;
+        --ink: #1b2430;
+        --ink-soft: #46536a;
+        --ink-faint: #6d7889;
+        --line: #d9d4c4;
+        --line-strong: #b9b29c;
+        --accent: #0e7a6d;
+        --accent-ink: #0a5c53;
+        --accent-soft: #dcefe9;
+        --amber: #a35b12;
+        --amber-soft: #f6e8d2;
+        --code-bg: #1b2430;
+        --code-ink: #d7e3da;
+        --shadow: 0 1px 2px rgba(27,36,48,.06), 0 8px 24px rgba(27,36,48,.06);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #10151d;
+          --bg-raise: #171e29;
+          --bg-sink: #0b0f16;
+          --ink: #e9e7de;
+          --ink-soft: #b3bccb;
+          --ink-faint: #8b96a8;
+          --line: #2b3547;
+          --line-strong: #43506a;
+          --accent: #3ec6b2;
+          --accent-ink: #7fe0d1;
+          --accent-soft: #173730;
+          --amber: #e2a558;
+          --amber-soft: #3a2c17;
+          --code-bg: #0b0f16;
+          --code-ink: #cfe3d8;
+          --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 72px; }
+      .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+      /* ---------- Hero ---------- */
+      .hero { padding: 44px 0 8px; }
+      .hero .path-line {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12.5px; letter-spacing: .04em;
+        color: var(--accent-ink);
+        margin: 0 0 14px;
+      }
+      h1 {
+        font-family: "IBM Plex Serif", Georgia, serif;
+        font-weight: 600;
+        font-size: clamp(30px, 5.4vw, 46px);
+        line-height: 1.12;
+        margin: 0 0 14px;
+        max-width: 20ch;
+      }
+      .hero .lede { font-size: 17.5px; color: var(--ink-soft); max-width: 62ch; margin: 0 0 26px; }
+      .hero .lede strong { color: var(--ink); }
+      .stat-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+        margin: 0 0 10px;
+      }
+      .stat {
+        background: var(--bg-raise); border: 1px solid var(--line);
+        border-radius: 10px; padding: 14px 16px;
+      }
+      .stat .num { font-family: "IBM Plex Mono", monospace; font-size: 26px; font-weight: 600; line-height: 1.1; }
+      .stat .lab { font-size: 12.5px; color: var(--ink-faint); margin-top: 3px; }
+
+      /* ---------- Sections ---------- */
+      section.block { margin-top: 44px; }
+      h2.sec {
+        font-size: 22px; font-weight: 700; margin: 0 0 6px;
+        display: flex; align-items: baseline; gap: 10px;
+      }
+      h2.sec .sec-no { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--accent-ink); font-weight: 600; }
+      .sec-sub { color: var(--ink-soft); margin: 0 0 18px; max-width: 66ch; }
+
+      /* How it works */
+      .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .rule {
+        background: var(--bg-raise); border: 1px solid var(--line); border-radius: 10px;
+        padding: 16px 18px;
+      }
+      .rule h3 { margin: 0 0 6px; font-size: 15.5px; }
+      .rule p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+      .rule .tag { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--amber); letter-spacing: .06em; text-transform: uppercase; display: block; margin-bottom: 8px; }
+
+      /* Pace picker */
+      .pace-box {
+        background: var(--bg-raise); border: 1px solid var(--line); border-radius: 14px;
+        padding: 20px; box-shadow: var(--shadow);
+      }
+      .pace-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+      .pace-btn {
+        font: inherit; font-size: 14.5px; font-weight: 600;
+        padding: 10px 18px; min-height: 44px;
+        background: var(--bg-sink); color: var(--ink);
+        border: 1px solid var(--line-strong); border-radius: 999px; cursor: pointer;
+      }
+      .pace-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+      @media (prefers-color-scheme: dark) { .pace-btn[aria-pressed="true"] { color: #0b1512; } }
+      .pace-out { font-size: 16px; margin: 0; }
+      .pace-out strong { color: var(--accent-ink); }
+      .pace-note { font-size: 13.5px; color: var(--ink-faint); margin: 8px 0 0; }
+
+      /* ---------- Toolbar ---------- */
+      .toolbar {
+        position: sticky; top: 0; z-index: 20;
+        background: var(--bg);
+        padding: 14px 0 10px;
+        border-bottom: 1px solid var(--line);
+        margin-top: 40px;
+      }
+      .toolbar-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+      .search {
+        flex: 1 1 240px; display: flex; align-items: center; gap: 8px;
+        background: var(--bg-raise); border: 1px solid var(--line-strong); border-radius: 10px;
+        padding: 0 12px;
+      }
+      .search svg { flex: none; color: var(--ink-faint); }
+      .search input {
+        flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink);
+        font: inherit; font-size: 15px; padding: 11px 0; min-height: 44px; outline: none;
+      }
+      .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+      .chip {
+        font: inherit; font-size: 13.5px; font-weight: 500;
+        padding: 8px 14px; min-height: 40px;
+        background: transparent; color: var(--ink-soft);
+        border: 1px solid var(--line-strong); border-radius: 999px; cursor: pointer;
+      }
+      .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+      .count-line { font-size: 13px; color: var(--ink-faint); margin: 10px 0 0; font-family: "IBM Plex Mono", monospace; }
+
+      /* ---------- Tracks & phases ---------- */
+      .track-head { margin: 38px 0 4px; }
+      .track-head .track-kicker {
+        font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em;
+        text-transform: uppercase; color: var(--amber); margin: 0 0 4px;
+      }
+      .track-head h3 { font-size: 20px; margin: 0; }
+      .track-head p { color: var(--ink-soft); margin: 4px 0 0; max-width: 64ch; font-size: 14.5px; }
+
+      .phase {
+        background: var(--bg-raise); border: 1px solid var(--line); border-radius: 14px;
+        margin-top: 14px; box-shadow: var(--shadow); overflow: hidden;
+      }
+      .phase summary {
+        list-style: none; cursor: pointer; min-height: 44px;
+        padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;
+      }
+      .phase summary::-webkit-details-marker { display: none; }
+      .phase summary:focus-visible, .chip:focus-visible, .pace-btn:focus-visible, .search input:focus-visible {
+        outline: 2px solid var(--accent); outline-offset: 2px;
+      }
+      .phase-no {
+        font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 15px;
+        background: var(--accent-soft); color: var(--accent-ink);
+        border-radius: 8px; padding: 6px 0; width: 44px; text-align: center; flex: none;
+      }
+      .phase-head-main { flex: 1; min-width: 0; }
+      .phase-title { font-size: 18px; font-weight: 700; margin: 2px 0 4px; line-height: 1.3; }
+      .phase-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--ink-faint); font-family: "IBM Plex Mono", monospace; }
+      .phase-teaser { font-size: 14.5px; color: var(--ink-soft); margin: 8px 0 0; max-width: 68ch; }
+      .chev { flex: none; margin-top: 8px; color: var(--ink-faint); transition: transform .18s ease; }
+      .phase[open] .chev { transform: rotate(180deg); }
+      @media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+
+      .phase-body { border-top: 1px solid var(--line); padding: 20px; }
+      .body-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
+      .body-grid h4 {
+        font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .07em;
+        text-transform: uppercase; color: var(--ink-faint); margin: 0 0 10px; font-weight: 600;
+      }
+      .topics { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+      .topics li {
+        font-size: 14.5px; padding: 7px 10px; border-radius: 6px;
+        background: var(--bg-sink); display: flex; gap: 8px; align-items: baseline;
+      }
+      .topics li .idx { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--accent-ink); flex: none; }
+      .topics li.group { grid-column: 1 / -1; background: transparent; padding-left: 2px; font-weight: 600; }
+      .topics li.sub { margin-left: 18px; }
+      .side-stack { display: flex; flex-direction: column; gap: 18px; }
+      .callout { border-radius: 10px; padding: 14px 16px; font-size: 14.5px; }
+      .callout p { margin: 0; }
+      .callout .lab { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .07em; text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600; }
+      .callout.build { background: var(--amber-soft); }
+      .callout.build .lab { color: var(--amber); }
+      .callout.note { background: var(--accent-soft); }
+      .callout.note .lab { color: var(--accent-ink); }
+      .callout.outcome { background: var(--bg-sink); }
+      .callout.outcome .lab { color: var(--ink-faint); }
+      .resources { margin: 0; padding: 0; list-style: none; font-size: 14px; color: var(--ink-soft); }
+      .resources li { padding: 5px 0; border-bottom: 1px dashed var(--line); }
+      .resources li:last-child { border-bottom: 0; }
+      .resources .rtype { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--amber); text-transform: uppercase; letter-spacing: .05em; margin-right: 6px; }
+      .resources a {
+        display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap;
+        color: var(--accent-ink); text-decoration: none;
+        padding: 6px 8px; margin: 0 -8px; border-radius: 6px; min-height: 36px;
+      }
+      .resources a .rtitle { text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+      .resources a:hover .rtitle, .resources a:focus-visible .rtitle { text-decoration-color: var(--accent); }
+      .resources a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .resources .free {
+        font-family: "IBM Plex Mono", monospace; font-size: 10.5px; font-weight: 600;
+        color: var(--accent-ink); background: var(--accent-soft);
+        border-radius: 999px; padding: 2px 8px; white-space: nowrap;
+      }
+      .resources .ext { color: var(--ink-faint); font-size: 12px; flex: none; }
+
+      .empty { display: none; padding: 28px; text-align: center; color: var(--ink-soft); border: 1px dashed var(--line-strong); border-radius: 14px; margin-top: 14px; }
+      .empty.show { display: block; }
+
+      /* ---------- Finale ---------- */
+      .finale {
+        margin-top: 52px; background: var(--code-bg); color: var(--code-ink);
+        border-radius: 16px; padding: 30px 28px;
+      }
+      .finale .mono { color: #8fd8c9; font-size: 12.5px; letter-spacing: .06em; }
+      .finale h2 { font-family: "IBM Plex Serif", Georgia, serif; font-size: clamp(24px, 4vw, 32px); margin: 10px 0 12px; color: #f2f0e6; line-height: 1.2; }
+      .finale p { margin: 0 0 14px; max-width: 62ch; color: #b9c4c0; }
+      .finale .caps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+      .finale .caps span {
+        font-family: "IBM Plex Mono", monospace; font-size: 13px;
+        border: 1px solid #3a4a52; border-radius: 999px; padding: 7px 14px; color: #e6efe9;
+      }
+      .grad-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 22px; }
+      .grad-list li { font-size: 14.5px; padding-left: 22px; position: relative; color: #d9e2dc; }
+      .grad-list li::before { content: "▸"; position: absolute; left: 2px; color: #8fd8c9; }
+
+      footer.colophon { margin-top: 40px; font-size: 13px; color: var(--ink-faint); border-top: 1px solid var(--line); padding-top: 16px; }
+
+      @media (max-width: 760px) {
+        .stat-grid { grid-template-columns: repeat(2, 1fr); }
+        .rules { grid-template-columns: 1fr; }
+        .body-grid { grid-template-columns: 1fr; }
+        .topics { grid-template-columns: 1fr; }
+        .grad-list { grid-template-columns: 1fr; }
+        .phase summary { padding: 16px; gap: 12px; }
+        .phase-body { padding: 16px; }
+        .hero { padding-top: 30px; }
+      }
+      @media print {
+        .toolbar, .pace-btns { display: none; }
+        .phase { break-inside: avoid; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+
+      <!-- ================= HERO ================= -->
+      <header class="hero">
+        <p class="path-line">~/roadmap/llms $ self-learn --goal production-ready</p>
+        <h1>Become a Production-Ready LLM Engineer</h1>
+        <p class="lede">A complete self-learning course built from the 21-phase LLM roadmap — from Python and linear algebra all the way to fine-tuning, RAG, agents, and production deployment. Every phase tells you <strong>what to learn, why it matters, what to build, and when you're done</strong>. No fluff: each phase ends with something working in a repo.</p>
+        <div class="stat-grid">
+          <div class="stat"><div class="num">21</div><div class="lab">Phases, in dependency order</div></div>
+          <div class="stat"><div class="num">230+</div><div class="lab">Topics across all phases</div></div>
+          <div class="stat"><div class="num">~665</div><div class="lab">Estimated focused hours</div></div>
+          <div class="stat"><div class="num">21</div><div class="lab">Build projects — one per phase</div></div>
+        </div>
+      </header>
+
+      <!-- ================= HOW IT WORKS ================= -->
+      <section class="block" aria-labelledby="how-h">
+        <h2 class="sec" id="how-h"><span class="sec-no">00</span> How to work through this course</h2>
+        <p class="sec-sub">Three rules separate people who finish roadmaps like this from people who collect them. They come from how working LLM engineers actually learn on the job.</p>
+        <div class="rules">
+          <div class="rule">
+            <span class="tag">Rule 1 — Build first</span>
+            <h3>Every phase ends in a repo</h3>
+            <p>Reading about attention is not knowing attention. Each phase has a <strong>Build</strong> task — finish it before moving on, even if it's ugly. Your GitHub history becomes your portfolio in Phase 21.</p>
+          </div>
+          <div class="rule">
+            <span class="tag">Rule 2 — Depth gates</span>
+            <h3>Don't skip the math or the transformer</h3>
+            <p>Phases 2 and 6 are the two places learners cut corners — and the two places interviewers probe hardest. If you can derive backprop and write scaled dot-product attention from scratch, everything after gets easier.</p>
+          </div>
+          <div class="rule">
+            <span class="tag">Rule 3 — Timebox</span>
+            <h3>Stuck for 2 days? Move on, mark it</h3>
+            <p>Note the gap and keep going. Later phases revisit earlier ideas in applied form, and most "stuck" topics click the second time you meet them. Perfectionism, not difficulty, is the main dropout cause.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PACE ================= -->
+      <section class="block" aria-labelledby="pace-h">
+        <h2 class="sec" id="pace-h"><span class="sec-no">01</span> Pick your pace</h2>
+        <p class="sec-sub">The full roadmap is roughly 665 focused hours. Choose a weekly commitment and see what the finish line looks like. Consistency beats intensity — a pace you can hold for months wins.</p>
+        <div class="pace-box">
+          <div class="pace-btns" role="group" aria-label="Weekly study hours">
+            <button class="pace-btn" type="button" data-hours="5" aria-pressed="false">5 hrs / week · steady</button>
+            <button class="pace-btn" type="button" data-hours="10" aria-pressed="true">10 hrs / week · committed</button>
+            <button class="pace-btn" type="button" data-hours="20" aria-pressed="false">20 hrs / week · intensive</button>
+          </div>
+          <p class="pace-out" id="pace-out"></p>
+          <p class="pace-note">Estimates assume focused, hands-on time (coding along, building the projects), not passive video watching. Add ~20% if you're also working full-time and studying tired — plan for it instead of quitting over it.</p>
+        </div>
+      </section>
+
+      <!-- ================= TOOLBAR + PHASES ================= -->
+      <div class="toolbar">
+        <div class="toolbar-row">
+          <label class="search">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="q" type="search" placeholder="Search topics — try “LoRA”, “attention”, “RAG”, “Docker”…" aria-label="Search course topics" />
+          </label>
+        </div>
+        <div class="chips" id="track-chips" role="group" aria-label="Filter by track"></div>
+        <p class="count-line" id="count-line" aria-live="polite"></p>
+      </div>
+
+      <div id="course"></div>
+      <div class="empty" id="empty">No topics match that search. Try a shorter term — “embed”, “agent”, “quant” — or clear the track filter.</div>
+
+      <!-- ================= FINALE ================= -->
+      <section class="finale" aria-labelledby="fin-h">
+        <p class="mono">FINAL GOAL · PHASE 21 → GRADUATION</p>
+        <h2 id="fin-h">Build, fine-tune, evaluate, optimize &amp; deploy — end to end.</h2>
+        <p>Finishing the phases isn't the goal; being able to do the job is. You're done with this course when you can honestly say yes to each of these:</p>
+        <ul class="grad-list">
+          <li>I can train a small transformer from scratch and explain every tensor shape inside it.</li>
+          <li>I can fine-tune an open model with LoRA/QLoRA on my own dataset — and prove it got better.</li>
+          <li>I can build a RAG system with chunking, hybrid search, and reranking, and evaluate it with RAGAS.</li>
+          <li>I can ship an agent that calls tools safely, with tracing, guardrails, and a cost budget.</li>
+          <li>I can serve a model behind an API with batching, quantization, and latency/cost numbers I measured myself.</li>
+          <li>I have a public portfolio of these projects, written up so another engineer can reproduce them.</li>
+        </ul>
+        <div class="caps">
+          <span>Building</span><span>Fine-Tuning</span><span>Evaluating</span><span>Optimizing</span><span>Deploying</span>
+        </div>
+      </section>
+
+      <footer class="colophon">
+        <p>Course structure follows the 21-phase Large Language Models roadmap. Hours are planning estimates for a learner who already writes some code; adjust them to your own pace. Every “Start here” pick is a live link to the official source — official docs, open courses, and papers — chosen to be free to open (Coursera picks are free to audit) and beginner-friendly. Links open in a new tab.</p>
+      </footer>
+    </main>
+
+    <script>
+      var TRACKS = [
+        { id: "foundations", name: "Foundations", sub: "Tracks A · Phases 1–5", desc: "Code, math, and classical ML/DL. Unskippable groundwork — this is what makes the LLM phases feel easy instead of magical." },
+        { id: "core", name: "Core LLM Knowledge", sub: "Track B · Phases 6–9", desc: "The transformer, how LLMs actually work, tokenization, and the model zoo. The heart of the course." },
+        { id: "applied", name: "Applied LLM Engineering", sub: "Track C · Phases 10–14", desc: "Prompting, APIs, fine-tuning, RAG, and agents — the skills that make up most day-to-day LLM engineering jobs." },
+        { id: "production", name: "Advanced & Production", sub: "Track D · Phases 15–19", desc: "Multimodal models, evaluation, inference optimization, security, and LLMOps — what separates a demo from a product." },
+        { id: "career", name: "Portfolio & Career", sub: "Track E · Phases 20–21", desc: "Twelve real projects and the professional habits that turn skills into a hireable LLM engineer." }
+      ];
+</script>
+
+    <script>
+      var PHASES = [
+        {
+          n: 1, track: "foundations", title: "Programming Foundations", hours: 30, level: "Beginner",
+          teaser: "Python is the language of the entire LLM stack. Get fluent enough that code never blocks you from learning the ideas.",
+          topics: ["Python Fundamentals", "Data Structures & Algorithms", "Object-Oriented Programming", "Functional Programming", "NumPy & Pandas", "Git & GitHub", "Linux & Command Line", "APIs & JSON"],
+          outcome: "You write clean Python without tutorials open, manipulate arrays and dataframes fluently, use Git daily, and can call any REST API and parse its JSON.",
+          build: "A command-line tool that fetches data from a public API, cleans it with Pandas, and saves a summary report — committed to GitHub with a proper README.",
+          note: "NumPy is not optional homework: every tensor operation in PyTorch mirrors it. If broadcasting and axis arguments feel automatic, Phase 4 gets twice as fast.",
+          resources: [["Course", "CS50P — Harvard's Python course (edX)"], ["Book", "Python Crash Course — Eric Matthes"], ["Practice", "Exercism Python track + LeetCode easy/medium"], ["Docs", "NumPy & Pandas official user guides"]]
+        },
+        {
+          n: 2, track: "foundations", title: "Mathematics for LLMs", hours: 35, level: "Beginner–Intermediate",
+          teaser: "Just enough math to understand — not just use — neural networks. Focus on intuition and computation, not proofs.",
+          groups: [
+            { name: "Linear Algebra", items: ["Vectors & Matrices", "Matrix Multiplication", "Dot Products", "Eigenvalues & Eigenvectors"] },
+            { name: "Calculus", items: ["Derivatives", "Gradients", "Chain Rule"] }
+          ],
+          topics: ["Probability Theory", "Statistics", "Probability Distributions", "Optimization", "Gradient Descent"],
+          outcome: "You can compute a dot product by hand, explain what a gradient points at, why the chain rule makes backpropagation possible, and what a probability distribution over next tokens really means.",
+          build: "Implement gradient descent from scratch in NumPy to fit a line, then a tiny logistic regression — no ML libraries allowed.",
+          note: "The chain rule and matrix multiplication are the two load-bearing ideas. Eigenvalues matter later for understanding embeddings and PCA — learn the intuition now, depth can wait.",
+          resources: [["Video", "3Blue1Brown — Essence of Linear Algebra & Essence of Calculus"], ["Course", "Mathematics for Machine Learning (Coursera) — linear algebra & calculus tracks"], ["Book", "Mathematics for Machine Learning (free PDF) — Deisenroth et al."], ["Interactive", "Seeing Theory — visual statistics & probability"]]
+        },
+        {
+          n: 3, track: "foundations", title: "Machine Learning Fundamentals", hours: 30, level: "Beginner–Intermediate",
+          teaser: "The classical ML mental models — training vs. testing, overfitting, loss, evaluation — that LLMs inherit wholesale.",
+          topics: ["Supervised Learning", "Unsupervised Learning", "Classification & Regression", "Training & Testing", "Feature Engineering", "Overfitting & Underfitting", "Loss Functions", "Model Evaluation", "Scikit-learn"],
+          outcome: "You can frame a problem as classification or regression, split data honestly, read a confusion matrix, and explain overfitting to a non-technical person.",
+          build: "Train and evaluate two scikit-learn models on a real tabular dataset (e.g. Titanic or housing prices) with a proper train/test split and an evaluation write-up.",
+          note: "Evaluation discipline learned here — never tune on your test set — is exactly the discipline that separates real fine-tuning results from self-deception in Phase 12.",
+          resources: [["Course", "Andrew Ng — Machine Learning Specialization (Coursera)"], ["Course", "Google Machine Learning Crash Course"], ["Book", "Hands-On ML with Scikit-Learn, Keras & TensorFlow — Aurélien Géron"], ["Docs", "Scikit-learn user guide & worked examples"]]
+        },
+        {
+          n: 4, track: "foundations", title: "Deep Learning Foundations", hours: 40, level: "Intermediate",
+          teaser: "Neural networks end to end: forward pass, backprop, optimizers, regularization — and your first real PyTorch training loop.",
+          topics: ["Neural Networks", "Perceptrons", "Activation Functions", "Forward Propagation", "Backpropagation", "Gradient Descent", "Optimizers (Adam, SGD, AdamW)", "Loss Functions", "Regularization", "GPU Computing", "PyTorch & TensorFlow"],
+          outcome: "You can derive backpropagation on paper, build and train an MLP in PyTorch, choose an optimizer and learning rate sensibly, and read a loss curve like a diagnostic chart.",
+          build: "Train an image classifier (CIFAR-10 or Fashion-MNIST) in PyTorch with augmentation and regularization; log the run and beat a naive baseline.",
+          note: "Pick PyTorch as your primary framework — the LLM ecosystem (Hugging Face, vLLM, most research code) lives there. Learn TensorFlow well enough to read it, not to write it.",
+          resources: [["Video", "Andrej Karpathy — Neural Networks: Zero to Hero (the backprop episodes)"], ["Course", "fast.ai — Practical Deep Learning for Coders"], ["Book", "Understanding Deep Learning — Simon Prince (free online)"], ["Docs", "PyTorch official tutorials"]]
+        },
+        {
+          n: 5, track: "foundations", title: "Natural Language Processing (NLP)", hours: 30, level: "Intermediate",
+          teaser: "How machines represented text before transformers — the ideas (embeddings, sequence models) that LLMs grew directly out of.",
+          topics: ["Text Preprocessing", "Tokenization", "Stemming & Lemmatization", "Bag of Words", "TF-IDF", "Word Embeddings", "Word2Vec & GloVe", "Sequence Modeling", "RNNs & LSTMs", "GRUs", "Language Modeling"],
+          outcome: "You can build a TF-IDF classifier, train Word2Vec embeddings and explore them, and explain precisely what problem RNNs/LSTMs solved — and where they broke, which motivates attention.",
+          build: "A sentiment classifier two ways: TF-IDF + logistic regression, then an LSTM in PyTorch. Compare them and write up where each fails.",
+          note: "Don't rush this phase to 'get to the modern stuff.' When you later meet contextual embeddings and attention, you'll understand them as answers to specific failures you have personally hit here.",
+          resources: [["Course", "Hugging Face NLP Course (free) — classic NLP chapters"], ["Book", "Speech and Language Processing — Jurafsky & Martin (free draft online)"], ["Course", "Stanford CS224n — Natural Language Processing with Deep Learning"], ["Practice", "NLTK & spaCy official tutorials"]]
+        },
+        {
+          n: 6, track: "core", title: "Transformer Architecture", hours: 35, level: "Intermediate–Advanced",
+          teaser: "The single most important architecture in modern AI. Study it until you can rebuild it — this phase is the course's center of gravity.",
+          topics: ["Attention Mechanism", "Self-Attention", "Multi-Head Attention", "Scaled Dot-Product Attention", "Query, Key & Value", "Positional Encoding", "Feed-Forward Networks", "Layer Normalization", "Residual Connections", "Encoder Architecture", "Decoder Architecture", "Encoder-Decoder Architecture"],
+          outcome: "You can write scaled dot-product attention from memory, trace tensor shapes through a full transformer block, and explain why scaling, masking, residuals, and layer norm each exist.",
+          build: "Implement a mini-GPT from scratch in PyTorch (no nn.Transformer shortcuts) and train it on a small text corpus until it generates coherent character-level text.",
+          note: "Follow Karpathy's 'Let's build GPT' line by line, then close the video and rewrite it yourself. The gap between those two attempts is exactly what you learned.",
+          resources: [["Paper", "Attention Is All You Need — Vaswani et al. (2017)"], ["Video", "Andrej Karpathy — Let's Build GPT, from Scratch"], ["Blog", "The Illustrated Transformer — Jay Alammar"], ["Book", "Build a Large Language Model (From Scratch) — Sebastian Raschka"]]
+        },
+        {
+          n: 7, track: "core", title: "Understanding Large Language Models", hours: 20, level: "Intermediate",
+          teaser: "What an LLM actually is: a next-token predictor at scale — and why that produces reasoning, hallucinations, and everything in between.",
+          topics: ["What Are LLMs?", "How LLMs Work", "LLM Architecture", "Parameters & Model Weights", "Pretraining", "Next-Token Prediction", "Context Windows", "Inference & Generation", "Temperature & Sampling", "Top-k & Top-p Sampling", "Hallucinations", "Open-Source vs Closed-Source Models"],
+          outcome: "You can explain pretraining vs. inference, what temperature/top-p do to the token distribution, why hallucinations are structural (not bugs), and how to choose between open and closed models for a given job.",
+          build: "Using any hosted API, run a sampling experiment: same prompt at temperatures 0 / 0.7 / 1.3 and top-p variations; log and compare 50 generations and chart the diversity/quality trade-off.",
+          note: "Internalize this: the model predicts plausible text, not true text. Every reliability technique later — RAG, guardrails, evaluation — exists to compensate for that one fact.",
+          resources: [["Video", "Andrej Karpathy — Intro to Large Language Models (1-hour talk)"], ["Blog", "Stephen Wolfram — What Is ChatGPT Doing … and Why Does It Work?"], ["Course", "DeepLearning.AI — Generative AI with LLMs (Coursera)"], ["Reference", "Hugging Face — LLM Course & model documentation"]]
+        },
+        {
+          n: 8, track: "core", title: "Tokenization & Embeddings", hours: 20, level: "Intermediate",
+          teaser: "Models never see words — they see token IDs. Tokenization quietly controls cost, context length, multilingual quality, and weird model failures.",
+          topics: ["Tokenization Fundamentals", "Byte Pair Encoding (BPE)", "WordPiece", "SentencePiece", "Token IDs", "Embedding Spaces", "Semantic Similarity", "Cosine Similarity", "Positional Embeddings", "Contextual Embeddings"],
+          outcome: "You can train a BPE tokenizer, explain why 'strawberry' letter-counting trips models up, compute cosine similarity between embeddings, and diagnose tokenization-driven cost and quality issues.",
+          build: "Train a BPE tokenizer on a small corpus with Hugging Face Tokenizers, then visualize the embedding space of a pretrained model (PCA/t-SNE) and probe semantic neighborhoods.",
+          note: "Rule of thumb worth memorizing: ~4 characters ≈ 1 token for English. You'll use it constantly for API cost estimates and context budgeting in production.",
+          resources: [["Video", "Andrej Karpathy — Let's Build the GPT Tokenizer"], ["Docs", "Hugging Face — Tokenizers & Summarization/tokenization guides"], ["Tool", "OpenAI Tokenizer playground (tiktoken)"], ["Paper", "SentencePiece — Kudo & Richardson (2018)"]]
+        },
+        {
+          n: 9, track: "core", title: "Popular LLM Architectures & Models", hours: 25, level: "Intermediate",
+          teaser: "A field guide to the model zoo: which architecture fits which job, and how to read a model card like an engineer, not a fan.",
+          topics: ["GPT Models", "BERT", "T5", "Llama", "Mistral", "Qwen", "Gemma", "DeepSeek", "Phi", "Mixture of Experts (MoE)", "Encoder-Only Models", "Decoder-Only Models", "Multimodal LLMs"],
+          outcome: "Given a task, you can pick encoder-only vs. decoder-only vs. encoder-decoder, dense vs. MoE, and defend the choice on cost, latency, and quality — and you know what each major open model family is optimized for.",
+          build: "A comparison lab: run the same classification, generation, and embedding tasks through one encoder-only, one decoder-only, and one small MoE model locally; tabulate quality, speed, and memory.",
+          note: "Model rankings churn monthly; architecture literacy doesn't. Learn to evaluate a new model in an afternoon — license, context, tokenizer, benchmark methodology — instead of memorizing leaderboards.",
+          resources: [["Reference", "Hugging Face Hub — model cards & Open LLM Leaderboard"], ["Paper", "BERT (2018), GPT-3 (2020), Llama 2/3 reports, DeepSeek-V3 report"], ["Blog", "Sebastian Raschka — LLM architecture comparisons"], ["Reference", "LMSYS Chatbot Arena — methodology & results"]]
+        },
+        {
+          n: 10, track: "applied", title: "Prompt Engineering", hours: 20, level: "Intermediate",
+          teaser: "The cheapest capability upgrade you own. Systematic prompting — and defending against prompt injection — is a core engineering skill, not a party trick.",
+          topics: ["Zero-Shot Prompting", "Few-Shot Prompting", "Chain-of-Thought Prompting", "Role-Based Prompting", "System & User Instructions", "Context Engineering", "Structured Outputs", "JSON Mode", "Prompt Templates", "Prompt Optimization", "Prompt Injection Defense"],
+          outcome: "You can design prompts as versioned, testable artifacts: few-shot with good exemplars, chain-of-thought where it helps, schema-validated JSON output, and basic injection defenses for user-supplied content.",
+          build: "A prompt test bench: one extraction task, 4 prompt strategies, a fixed eval set of 30 inputs, scored automatically. Ship the winning prompt as a template file with the eval results in the README.",
+          note: "Treat prompts like code: version them, test them against a fixed set, and never 'just tweak' production prompts without re-running the eval. Phase 16 builds the full harness for this.",
+          resources: [["Guide", "Anthropic — Prompt Engineering documentation"], ["Guide", "OpenAI — Prompt Engineering guide & Cookbook"], ["Site", "Learn Prompting (learnprompting.org)"], ["Paper", "Chain-of-Thought Prompting Elicits Reasoning (2022)"]]
+        },
+        {
+          n: 11, track: "applied", title: "LLM APIs & Development Tools", hours: 30, level: "Intermediate",
+          teaser: "The working toolkit: hosted APIs, local models, serving engines, frameworks — and knowing which layer of the stack each tool actually owns.",
+          topics: ["OpenAI API", "Anthropic API", "Google Gemini API", "Hugging Face Transformers", "Ollama", "vLLM", "LiteLLM", "LangChain", "LlamaIndex", "Vercel AI SDK", "Model Context Protocol (MCP)"],
+          outcome: "You can call three provider APIs from one codebase (via LiteLLM), run open models locally with Ollama, serve one with vLLM, and explain when LangChain/LlamaIndex help vs. when plain code is cleaner.",
+          build: "A multi-provider chat CLI: switch between a hosted API, Ollama locally, and a vLLM endpoint with a flag; add streaming, token counting, and per-call cost logging.",
+          note: "Frameworks age fast; the API patterns (messages, tools, structured output, streaming) transfer. Learn the raw API first, then let frameworks save you time — not understanding.",
+          resources: [["Docs", "OpenAI, Anthropic & Google Gemini API references"], ["Docs", "Hugging Face Transformers — pipeline & inference guides"], ["Docs", "vLLM & Ollama official documentation"], ["Reference", "Model Context Protocol — official specification & SDKs"]]
+        },
+        {
+          n: 12, track: "applied", title: "Fine-Tuning & Model Adaptation", hours: 40, level: "Advanced",
+          teaser: "When prompting isn't enough: adapt the model itself. LoRA/QLoRA make this affordable on a single GPU — data quality decides whether it works.",
+          topics: ["Pretraining vs Fine-Tuning", "Supervised Fine-Tuning (SFT)", "Instruction Tuning", "Parameter-Efficient Fine-Tuning", "LoRA", "QLoRA", "Adapters", "Quantization", "RLHF", "Direct Preference Optimization (DPO)", "Dataset Preparation", "Fine-Tuning Evaluation"],
+          outcome: "You can prepare a clean instruction dataset, run a LoRA/QLoRA fine-tune with TRL/PEFT, evaluate it against the base model on a held-out set, and explain when fine-tuning beats RAG (behavior/format) and when it doesn't (facts).",
+          build: "Fine-tune a small open model (e.g. Qwen or Llama 3B-class) with QLoRA on a domain dataset you curate; publish base-vs-tuned eval scores and example outputs.",
+          note: "80% of fine-tuning success is dataset curation: deduplicate, balance, format consistently, hold out a real test set. A mediocre model on clean data beats a big model on scraped noise.",
+          resources: [["Docs", "Hugging Face — PEFT, TRL & Datasets documentation"], ["Paper", "LoRA (2021) & QLoRA (2023)"], ["Course", "DeepLearning.AI — Finetuning Large Language Models"], ["Tool", "Axolotl / LLaMA-Factory — fine-tuning configs"]]
+        },
+        {
+          n: 13, track: "applied", title: "Retrieval-Augmented Generation (RAG)", hours: 35, level: "Advanced",
+          teaser: "Grounding models in your documents: the most deployed LLM pattern in real products — and the one with the most silent failure modes.",
+          groups: [
+            { name: "Vector Databases", items: ["Pinecone", "Chroma", "Weaviate", "Qdrant", "Milvus"] }
+          ],
+          topics: ["RAG Fundamentals", "Document Loading", "Text Extraction", "Document Chunking", "Embedding Generation", "Semantic Search", "Hybrid Search", "Metadata Filtering", "Reranking", "Query Transformation", "Advanced RAG", "RAG Evaluation"],
+          outcome: "You can build the full pipeline — load, chunk, embed, index, retrieve, rerank, generate with citations — and debug the classic failure: 'the answer was in the docs but the system still got it wrong' (usually retrieval, not generation).",
+          build: "A RAG assistant over a real document set (e.g. a product's docs): hybrid search + reranking, source citations in answers, and a 20-question golden eval set scored for retrieval recall and answer faithfulness.",
+          note: "Chunking and retrieval quality matter more than the generator model. Evaluate retrieval separately from generation, or you'll spend weeks prompting at a search problem.",
+          resources: [["Course", "DeepLearning.AI — LangChain & RAG short courses"], ["Docs", "LlamaIndex — RAG guides & evaluation docs"], ["Docs", "Qdrant / Chroma official tutorials"], ["Framework", "RAGAS documentation — RAG evaluation metrics"]]
+        },
+        {
+          n: 14, track: "applied", title: "AI Agents & Tool Calling", hours: 35, level: "Advanced",
+          teaser: "Models that act: plan, call tools, remember, and recover from errors. Powerful — and the phase where safety and evaluation stop being optional.",
+          topics: ["AI Agent Fundamentals", "Function Calling", "Tool Use", "Agent Planning", "Memory Systems", "Short-Term & Long-Term Memory", "Reflection & Self-Correction", "ReAct Pattern", "Agentic Workflows", "Multi-Agent Systems", "LangGraph", "CrewAI", "AutoGen", "Agent Evaluation & Safety"],
+          outcome: "You can build a ReAct-style agent with typed tools, short- and long-term memory, step limits and human-approval gates — and evaluate it on task completion, not vibes. You know when a simple workflow beats an autonomous agent.",
+          build: "A research agent: searches sources, reads pages, and writes a cited brief — built on LangGraph with a tool-call trace, a max-step budget, and an eval set of 10 tasks scored for completion and citation accuracy.",
+          note: "Start with workflows (fixed steps, LLM at decision points) and add autonomy only where it measurably helps. Most production 'agents' that work are 80% workflow.",
+          resources: [["Blog", "Anthropic — Building Effective Agents"], ["Docs", "LangGraph documentation & tutorials"], ["Paper", "ReAct: Synergizing Reasoning and Acting (2022)"], ["Docs", "OpenAI & Anthropic — function/tool calling guides"]]
+        },
+        {
+          n: 15, track: "production", title: "Multimodal LLMs", hours: 25, level: "Advanced",
+          teaser: "Text was only the start: vision, audio, and video in the same context window — and the embedding tricks that connect them.",
+          topics: ["Vision-Language Models", "Image Understanding", "Image-to-Text", "Audio Understanding", "Speech-to-Text", "Text-to-Speech", "Video Understanding", "Multimodal Embeddings", "Vision Transformers (ViT)", "Multimodal RAG"],
+          outcome: "You can build apps that take images and audio as first-class input, caption and query visual content, transcribe and speak, and run retrieval across mixed text+image collections.",
+          build: "A multimodal assistant: upload a photo or screenshot and ask questions about it; add speech input/output; extend your Phase 13 RAG to index images alongside text.",
+          note: "Vision models fail differently than text models — small text in images, counting, spatial relations. Build a small visual test set early instead of discovering it in user reports.",
+          resources: [["Paper", "Attention Is All You Need → ViT: An Image Is Worth 16×16 Words (2020)"], ["Docs", "Hugging Face — vision & audio task guides"], ["Tool", "OpenAI Whisper — speech recognition repo & docs"], ["Reference", "CLIP — OpenAI paper & model card"]]
+        },
+        {
+          n: 16, track: "production", title: "LLM Evaluation & Observability", hours: 25, level: "Advanced",
+          teaser: "You can't ship what you can't measure. Evals are the unit tests of LLM engineering — and the skill teams screen for hardest after RAG.",
+          topics: ["Model Evaluation Metrics", "Perplexity", "BLEU & ROUGE", "Benchmarking", "Human Evaluation", "LLM-as-a-Judge", "RAGAS", "DeepEval", "Hallucination Detection", "Tracing & Logging", "Prompt Versioning", "Production Monitoring"],
+          outcome: "You can design an eval set that reflects real usage, combine automatic metrics with calibrated LLM-as-a-judge scoring, trace every production call, and catch regressions before users do.",
+          build: "An eval harness for your Phase 13/14 systems: golden dataset, RAGAS + DeepEval checks in CI, LLM-judge rubric, and a tracing dashboard (e.g. Langfuse or Phoenix) wired into the app.",
+          note: "An LLM judge is a measurement instrument — calibrate it against human labels and report its agreement, or your 'improvements' are noise. Never grade with the same model that generated, unexamined.",
+          resources: [["Docs", "RAGAS & DeepEval documentation"], ["Blog", "Hamel Husain — Your AI product needs evals (field guide)"], ["Course", "DeepLearning.AI — Evaluating and Debugging Generative AI"], ["Tool", "Langfuse / Arize Phoenix — tracing & eval docs"]]
+        },
+        {
+          n: 17, track: "production", title: "LLM Inference & Optimization", hours: 30, level: "Advanced",
+          teaser: "Serving models fast and cheap: KV cache, batching, quantization, and parallelism — the difference between a demo and a viable product margin.",
+          topics: ["Model Serving", "GPU & Memory Management", "Quantization (INT8, INT4)", "Model Pruning", "Knowledge Distillation", "KV Cache", "Continuous Batching", "Speculative Decoding", "FlashAttention", "Tensor Parallelism", "Pipeline Parallelism", "Distributed Inference"],
+          outcome: "You can estimate a model's memory footprint before loading it, explain how KV cache and continuous batching drive throughput, quantize a model to INT4 with measured quality loss, and read a serving benchmark (TTFT, tokens/sec) critically.",
+          build: "Benchmark lab: serve the same model with vLLM at FP16, INT8, and INT4; measure latency/throughput/quality on your eval set and write the cost-per-1M-tokens analysis.",
+          note: "Do the memory math by hand once: parameters × bytes + KV cache per token × context × batch. Engineers who can do this on a whiteboard don't get surprised by OOM errors in production.",
+          resources: [["Docs", "vLLM — optimization & PagedAttention documentation"], ["Paper", "FlashAttention (2022) & PagedAttention (2023)"], ["Blog", "Hugging Face — LLM inference & quantization guides"], ["Course", "DeepLearning.AI — Efficient LLM inference short courses"]]
+        },
+        {
+          n: 18, track: "production", title: "LLM Security & Responsible AI", hours: 20, level: "Advanced",
+          teaser: "LLM apps have a new attack surface: the prompt itself. Learn the threat model — injection, leakage, jailbreaks — and the layered defenses.",
+          topics: ["Prompt Injection", "Jailbreak Attacks", "Data Leakage", "Sensitive Information Protection", "Output Validation", "Guardrails", "Content Safety", "Model Bias & Fairness", "Adversarial Testing", "AI Governance"],
+          outcome: "You can threat-model an LLM feature, demonstrate direct and indirect prompt injection, and defend in depth: input/output validation, least-privilege tools, PII handling, guardrail models, and red-team tests in CI.",
+          build: "Red-team your own Phase 14 agent: write 20 attack cases (injection via retrieved docs, tool abuse, PII extraction), document which succeed, then harden the system and re-run until they fail.",
+          note: "The core principle: treat all model output and all retrieved content as untrusted input. An LLM should never hold authority — your code grants permissions, the model only proposes actions.",
+          resources: [["Reference", "OWASP Top 10 for LLM Applications"], ["Blog", "Simon Willison — prompt injection series"], ["Docs", "NVIDIA NeMo Guardrails documentation"], ["Reference", "NIST AI Risk Management Framework"]]
+        },
+        {
+          n: 19, track: "production", title: "LLMOps & Production Deployment", hours: 35, level: "Advanced",
+          teaser: "Ship it and keep it alive: containers, APIs, experiment tracking, CI/CD, cloud platforms — and the cost/latency discipline production demands.",
+          topics: ["Docker", "Kubernetes", "FastAPI", "Model Serving APIs", "MLflow", "Weights & Biases", "CI/CD Pipelines", "Cloud Deployment", "AWS Bedrock & SageMaker", "Google Vertex AI", "Azure AI Foundry", "Cost & Latency Optimization", "Production Reliability"],
+          outcome: "You can containerize an LLM service, deploy it behind FastAPI with auth and rate limits, track experiments and prompts as versioned artifacts, and set up monitoring with cost and latency budgets on one cloud platform end to end.",
+          build: "Productionize your best earlier project: Docker image, FastAPI service, CI pipeline that runs the Phase 16 evals on every change, deployed to a cloud endpoint with a cost/latency dashboard.",
+          note: "Pick one cloud and go deep enough to deploy confidently. Breadth across AWS/GCP/Azure matters less than having shipped — and debugged — one real system.",
+          resources: [["Course", "Full Stack Deep Learning — LLM Bootcamp materials"], ["Docs", "FastAPI & Docker official tutorials"], ["Book", "Designing Machine Learning Systems — Chip Huyen"], ["Docs", "AWS Bedrock / Vertex AI / Azure AI Foundry — getting-started guides"]]
+        },
+        {
+          n: 20, track: "career", title: "Build Real-World LLM Projects", hours: 80, level: "Portfolio",
+          teaser: "Twelve builds that together cover the whole stack. You don't need all twelve polished — but the starred core set should be demo-ready.",
+          topics: ["AI Chatbot", "PDF Question-Answering System", "Semantic Search Engine", "RAG-Based Knowledge Assistant", "AI Code Assistant", "AI Research Assistant", "Customer Support AI Agent", "Multimodal AI Assistant", "Fine-Tuned Domain-Specific LLM", "Multi-Agent Research System", "Local LLM Deployment Platform", "Production-Ready LLM SaaS"],
+          outcome: "A portfolio where each project has a live demo or clear run instructions, an eval section, and a write-up of trade-offs — the artifacts hiring managers actually open.",
+          build: "Prioritize: (1) RAG Knowledge Assistant, (2) Customer Support Agent, (3) Fine-Tuned Domain LLM, (4) one project of your choice taken to Production-Ready SaaS standard with auth, billing-aware cost tracking, and monitoring.",
+          note: "Depth beats count. One project with evals, tracing, and a cost analysis signals 'production-ready' louder than twelve tutorial clones. Reuse your phase projects — polish beats restart.",
+          resources: [["Reference", "Your own Phase 1–19 repos — the starting codebase"], ["Guide", "Hugging Face Spaces — demo deployment docs"], ["Blog", "Chip Huyen — building LLM applications for production"], ["Practice", "Kaggle & open-data sources for project datasets"]]
+        },
+        {
+          n: 21, track: "career", title: "Career & Professional Growth", hours: 25, level: "Career",
+          teaser: "Convert skill into a career: portfolio, papers, open source, community — and interview prep that tests exactly what this course built.",
+          topics: ["Build an LLM Engineering Portfolio", "Publish Projects on GitHub", "Master Python & SQL Interviews", "Learn AI System Design", "Study LLM Research Papers", "Reproduce Research Implementations", "Contribute to Open Source", "Participate in AI Communities", "Write Technical Articles", "Prepare for LLM Engineer Interviews"],
+          outcome: "You have a public portfolio with pinned, documented projects; at least one paper reproduction; one merged open-source contribution; and rehearsed answers — with system-design sketches — for the questions LLM engineer interviews actually ask.",
+          build: "The launch package: portfolio README linking your best 4 projects, one technical article explaining the hardest thing you built, and a 2-week interview drill plan (Python/SQL sets + 5 system-design prompts, e.g. 'design a RAG support bot for 1M users').",
+          note: "Paper reproductions are the highest-signal portfolio item per hour: pick a small, famous result (LoRA on a toy task, a RAG ablation) and reproduce it cleanly. It proves you read, implement, and measure — the whole job.",
+          resources: [["Community", "Hugging Face forums & Discord, local AI meetups"], ["Practice", "Papers With Code — reproduction starting points"], ["Reference", "Sebastian Raschka — FAQ & advice on ML careers"], ["Practice", "System design primers + LLM system-design write-ups (e.g. from production engineering blogs)"]]
+        }
+      ];
+
+      /* Best free, beginner-friendly link for each resource above, by phase + position.
+         Every URL is the official source: course home, official docs, paper, or author repo. */
+      var RES_URLS = {
+        1: ["https://cs50.harvard.edu/python/", "https://ehmatthes.github.io/pcc_3e/", "https://exercism.org/tracks/python", "https://numpy.org/learn/"],
+        2: ["https://www.3blue1brown.com/topics/linear-algebra", "https://www.coursera.org/specializations/mathematics-machine-learning", "https://mml-book.github.io/", "https://seeing-theory.brown.edu/"],
+        3: ["https://www.coursera.org/specializations/machine-learning-introduction", "https://developers.google.com/machine-learning/crash-course", "https://github.com/ageron/handson-ml3", "https://scikit-learn.org/stable/user_guide.html"],
+        4: ["https://karpathy.ai/zero-to-hero.html", "https://course.fast.ai/", "https://udlbook.github.io/udlbook/", "https://pytorch.org/tutorials/"],
+        5: ["https://huggingface.co/learn/nlp-course", "https://web.stanford.edu/~jurafsky/slp3/", "https://web.stanford.edu/class/cs224n/", "https://course.spacy.io/"],
+        6: ["https://arxiv.org/abs/1706.03762", "https://karpathy.ai/zero-to-hero.html", "https://jalammar.github.io/illustrated-transformer/", "https://github.com/rasbt/LLMs-from-scratch"],
+        7: ["https://www.youtube.com/watch?v=zjkBMFhNj_g", "https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/", "https://www.coursera.org/learn/generative-ai-with-llms", "https://huggingface.co/learn/llm-course"],
+        8: ["https://www.youtube.com/watch?v=zduSFxRajkE", "https://huggingface.co/docs/tokenizers/index", "https://platform.openai.com/tokenizer", "https://arxiv.org/abs/1808.06226"],
+        9: ["https://huggingface.co/models", "https://arxiv.org/abs/1810.04805", "https://magazine.sebastianraschka.com/", "https://lmarena.ai/"],
+        10: ["https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview", "https://cookbook.openai.com/", "https://learnprompting.org/", "https://arxiv.org/abs/2201.11903"],
+        11: ["https://platform.openai.com/docs", "https://huggingface.co/docs/transformers/index", "https://docs.vllm.ai/en/latest/", "https://modelcontextprotocol.io/introduction"],
+        12: ["https://huggingface.co/docs/peft/index", "https://arxiv.org/abs/2106.09685", "https://www.deeplearning.ai/short-courses/finetuning-large-language-models/", "https://github.com/axolotl-ai-cloud/axolotl"],
+        13: ["https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/", "https://docs.llamaindex.ai/en/stable/understanding/rag/", "https://qdrant.tech/documentation/quickstart/", "https://docs.ragas.io/en/stable/"],
+        14: ["https://www.anthropic.com/engineering/building-effective-agents", "https://langchain-ai.github.io/langgraph/", "https://arxiv.org/abs/2210.03629", "https://platform.openai.com/docs/guides/function-calling"],
+        15: ["https://arxiv.org/abs/2010.11929", "https://huggingface.co/learn/computer-vision-course", "https://github.com/openai/whisper", "https://github.com/openai/CLIP"],
+        16: ["https://docs.ragas.io/en/stable/", "https://hamel.dev/blog/posts/evals/", "https://www.deeplearning.ai/short-courses/evaluating-debugging-generative-ai/", "https://langfuse.com/docs"],
+        17: ["https://docs.vllm.ai/en/latest/", "https://arxiv.org/abs/2205.14135", "https://huggingface.co/docs/transformers/llm_tutorial", "https://www.deeplearning.ai/short-courses/"],
+        18: ["https://owasp.org/www-project-top-10-for-large-language-model-applications/", "https://simonwillison.net/series/prompt-injection/", "https://github.com/NVIDIA/NeMo-Guardrails", "https://www.nist.gov/itl/ai-risk-management-framework"],
+        19: ["https://fullstackdeeplearning.com/", "https://fastapi.tiangolo.com/tutorial/", "https://huyenchip.com/", "https://docs.aws.amazon.com/bedrock/latest/userguide/getting-started.html"],
+        20: ["https://github.com/", "https://huggingface.co/docs/hub/spaces", "https://huyenchip.com/2023/04/11/llm-engineering.html", "https://www.kaggle.com/datasets"],
+        21: ["https://discuss.huggingface.co/", "https://paperswithcode.com/", "https://sebastianraschka.com/faq/", "https://github.com/donnemartin/system-design-primer"]
+      };
+
+      /* ---------- Rendering ---------- */
+      function esc(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+
+      function topicsHTML(p) {
+        var html = "";
+        var idx = 0;
+        function item(label, cls) {
+          idx++;
+          return '<li class="' + (cls || "") + '"><span class="idx">' + String(idx).padStart(2, "0") + "</span><span>" + esc(label) + "</span></li>";
+        }
+        (p.groups || []).forEach(function (g) {
+          html += '<li class="group">' + esc(g.name) + "</li>";
+          g.items.forEach(function (it) { html += item(it, "sub"); });
+        });
+        (p.topics || []).forEach(function (t) { html += item(t, ""); });
+        return html;
+      }
+
+      function phaseHTML(p, isFirst) {
+        var topicCount = (p.topics ? p.topics.length : 0) + (p.groups || []).reduce(function (a, g) { return a + g.items.length; }, 0);
+        var urls = RES_URLS[p.n] || [];
+        var res = p.resources.map(function (r, i) {
+          var inner = '<span class="rtype">' + esc(r[0]) + '</span><span class="rtitle">' + esc(r[1]) + '</span><span class="free">Free</span><span class="ext" aria-hidden="true">↗</span>';
+          if (urls[i]) {
+            return '<li><a href="' + urls[i] + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(r[1]) + ' (free, opens in new tab)">' + inner + "</a></li>";
+          }
+          return "<li>" + inner + "</li>";
+        }).join("");
+        return '' +
+        '<details class="phase" data-track="' + p.track + '" data-search="' + esc((p.title + " " + (p.topics || []).join(" ") + " " + (p.groups || []).map(function (g) { return g.name + " " + g.items.join(" "); }).join(" ")).toLowerCase()) + '"' + (isFirst ? " open" : "") + ">" +
+          "<summary>" +
+            '<span class="phase-no">' + String(p.n).padStart(2, "0") + "</span>" +
+            '<span class="phase-head-main">' +
+              '<span class="phase-title">' + esc(p.title) + "</span>" +
+              '<span class="phase-meta"><span>~' + p.hours + ' hrs</span><span>' + esc(p.level) + '</span><span>' + topicCount + " topics</span></span>" +
+              '<span class="phase-teaser" style="display:block">' + esc(p.teaser) + "</span>" +
+            "</span>" +
+            '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
+          "</summary>" +
+          '<div class="phase-body"><div class="body-grid">' +
+            '<div><h4>Topics — in order</h4><ul class="topics">' + topicsHTML(p) + "</ul>" +
+            '<h4 style="margin-top:22px">Start here — free picks, tap to open</h4><ul class="resources">' + res + "</ul></div>" +
+            '<div class="side-stack">' +
+              '<div class="callout outcome"><span class="lab">Done when</span><p>' + esc(p.outcome) + "</p></div>" +
+              '<div class="callout build"><span class="lab">Build this</span><p>' + esc(p.build) + "</p></div>" +
+              '<div class="callout note"><span class="lab">Engineer\'s note</span><p>' + esc(p.note) + "</p></div>" +
+            "</div>" +
+          "</div></div>" +
+        "</details>";
+      }
+
+      var courseEl = document.getElementById("course");
+      var html = "";
+      TRACKS.forEach(function (t) {
+        html += '<div class="track-block" data-track-block="' + t.id + '">' +
+          '<div class="track-head"><p class="track-kicker">' + esc(t.sub) + "</p><h3>" + esc(t.name) + "</h3><p>" + esc(t.desc) + "</p></div>";
+        PHASES.filter(function (p) { return p.track === t.id; }).forEach(function (p, i) {
+          html += phaseHTML(p, p.n === 1);
+        });
+        html += "</div>";
+      });
+      courseEl.innerHTML = html;
+
+      /* ---------- Track filter chips ---------- */
+      var chipsEl = document.getElementById("track-chips");
+      var activeTrack = "all";
+      var chipDefs = [{ id: "all", name: "All tracks" }].concat(TRACKS);
+      chipDefs.forEach(function (t) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip";
+        b.textContent = t.name;
+        b.setAttribute("aria-pressed", t.id === "all" ? "true" : "false");
+        b.addEventListener("click", function () {
+          activeTrack = t.id;
+          Array.prototype.forEach.call(chipsEl.children, function (c) { c.setAttribute("aria-pressed", "false"); });
+          b.setAttribute("aria-pressed", "true");
+          applyFilters();
+        });
+        chipsEl.appendChild(b);
+      });
+
+      /* ---------- Search + filter ---------- */
+      var qEl = document.getElementById("q");
+      var countEl = document.getElementById("count-line");
+      var emptyEl = document.getElementById("empty");
+      var totalTopics = PHASES.reduce(function (a, p) {
+        return a + (p.topics ? p.topics.length : 0) + (p.groups || []).reduce(function (x, g) { return x + g.items.length; }, 0);
+      }, 0);
+
+      function applyFilters() {
+        var q = qEl.value.trim().toLowerCase();
+        var visiblePhases = 0;
+        Array.prototype.forEach.call(document.querySelectorAll(".phase"), function (ph) {
+          var okTrack = activeTrack === "all" || ph.getAttribute("data-track") === activeTrack;
+          var okQ = !q || ph.getAttribute("data-search").indexOf(q) !== -1;
+          var show = okTrack && okQ;
+          ph.style.display = show ? "" : "none";
+          if (show) visiblePhases++;
+        });
+        Array.prototype.forEach.call(document.querySelectorAll(".track-block"), function (tb) {
+          var any = Array.prototype.some.call(tb.querySelectorAll(".phase"), function (ph) { return ph.style.display !== "none"; });
+          tb.style.display = any ? "" : "none";
+        });
+        emptyEl.className = visiblePhases === 0 ? "empty show" : "empty";
+        countEl.textContent = "Showing " + visiblePhases + " of 21 phases · " + totalTopics + " topics total";
+      }
+      qEl.addEventListener("input", applyFilters);
+      applyFilters();
+
+      /* ---------- Pace picker ---------- */
+      var TOTAL_HOURS = PHASES.reduce(function (a, p) { return a + p.hours; }, 0);
+      var paceOut = document.getElementById("pace-out");
+      function setPace(hrs) {
+        var weeks = Math.ceil(TOTAL_HOURS / hrs);
+        var months = (weeks / 4.33);
+        var monthsTxt = months >= 12 ? (Math.floor(months / 12) + " yr " + Math.round(months % 12) + " mo") : Math.round(months) + " months";
+        var foundationsWk = Math.ceil(165 / hrs);
+        paceOut.innerHTML = "At <strong>" + hrs + " hrs/week</strong> you finish all 21 phases in about <strong>" + weeks + " weeks (~" + monthsTxt + ")</strong>. " +
+          "Foundations (Phases 1–5) take ~" + foundationsWk + " weeks; you reach your first fine-tune around week " + Math.ceil(355 / hrs) + " and your portfolio phase around week " + Math.ceil((TOTAL_HOURS - 105) / hrs) + ".";
+        Array.prototype.forEach.call(document.querySelectorAll(".pace-btn"), function (b) {
+          b.setAttribute("aria-pressed", String(Number(b.getAttribute("data-hours")) === hrs));
+        });
+      }
+      Array.prototype.forEach.call(document.querySelectorAll(".pace-btn"), function (b) {
+        b.addEventListener("click", function () { setPace(Number(b.getAttribute("data-hours"))); });
+      });
+      setPace(10);
+    </script>
+  </body>
+</html>
